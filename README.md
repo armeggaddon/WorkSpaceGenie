@@ -1,7 +1,7 @@
 
-# Genie Assistant
+# Workspace Genie
 
-Genie Assistant is a lightweight Visual Studio Code extension that helps generate documentation for codebases using a language model. It scans files in the open workspace, sends contextual prompts to a model, and writes the model-produced documentation into workspace output files.
+Workspace Genie is a lightweight Visual Studio Code extension that helps generate documentation for codebases using a language model. It scans files in the open workspace, sends contextual prompts to a model, and writes the model-produced documentation into workspace output files.
 
 **Primary goals:**
 - Make it easy to generate per-file documentation from natural-language prompts.
@@ -14,9 +14,38 @@ Genie Assistant is a lightweight Visual Studio Code extension that helps generat
 - Lightweight logging: `utils/scribe.js` (append-only timestamped log).
 - VS Code command and chat participant: `genie.processWorkspace` and `genie.assistant`.
 
+Chat Participant API
+--------------------
+
+Genie demonstrates a simple Chat Participant API implemented in `extension.js`. The extension registers a chat participant that can be invoked from VS Code's chat UI. The participant listens for short trigger commands (messages that start with `@genie`) and responds by running the same document-processing pipeline the command palette action uses. Two example chat triggers supported by the extension are:
+
+- `@genie` : Starts an interactive chat with Workspace Genie and uses the prompt + current workspace context to generate documentation or suggestions.
+- `@genie /createDocs` : Explicitly instructs Genie to scan the workspace and create documentation files (same behavior as `genie.processWorkspace`).
+
+Because the chat participant is a thin adapter over the existing `model_pipeline` and `fs_scanner` utilities, the same pattern can be reused for other conversational features (for example: code reviewers, changelog writers, test-case generators, or refactoring assistants). To add a new capability, implement a new command or chat trigger, reuse the existing context-collection helpers, and provide a different instruction template to the model.
+
+Reusability and extending functionality
+--------------------------------------
+
+The architecture intentionally separates responsibilities into small modules (`fs_scanner.js`, `model_pipeline.js`, `scribe.js`) and a lightweight extension entry (`extension.js`). This makes it straightforward to reuse the chat participant integration for additional features:
+
+- **New chat commands**: Add additional `@genie` triggers that map to different templates (e.g., `@genie /review`, `@genie /generateTests`).
+- **Different output flows**: Swap or extend `model_pipeline` to support other output formats (issues, unit tests, PR descriptions) while keeping the chat interface identical.
+- **Composable prompts**: Create templates that combine file context, recent commit messages, or test failures before sending to the model.
+
+Testing note
+------------
+
+The current implementation and automated tests were validated only with GPT-family models (models compatible with GPT-style prompting and streaming). If you use non-GPT model providers or vendor-specific APIs, you may need to adapt the `model_pipeline.js` integration and prompt/response handling to match those providers' conventions.
+
 **Requirements**
 - Node.js (v16+)
 - Visual Studio Code (recent stable release)
+
+Distribution
+------------
+
+- The extension is also available on the Visual Studio Marketplace (search for "Workspace Genie").
 
 Installation
 
@@ -38,7 +67,7 @@ Notes on behavior
 File structure (important files)
 
 ```
-genie-assistant/
+workspace-genie/
 ├── extension.js                # VS Code extension entry (chat participant + command)
 ├── utils/
 │   ├── fs_scanner.js          # Recursively find workspace files
@@ -98,7 +127,7 @@ If you'd like me to prepare a short LinkedIn post and packaging (zip + images) f
 
 Example prompts
 ----------------
-Here are a few sample prompts to try with Genie Assistant:
+Here are a few sample prompts to try with Workspace Genie:
 
 - "Create a short README for this file explaining purpose, usage, and example code snippets."
 - "Summarize the responsibilities of the functions in this file and list potential edge-cases."
@@ -126,4 +155,3 @@ Troubleshooting
 
 
 ````
-
