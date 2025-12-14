@@ -45,7 +45,7 @@ The current implementation and automated tests were validated only with GPT-fami
 Distribution
 ------------
 
-- The extension is also available on the Visual Studio Marketplace (search for "Workspace Genie").
+- The extension is also available on the Visual Studio Marketplace (search for ["Workspace Genie"](https://marketplace.visualstudio.com/items?itemName=VairaMuthuThangavel.genie-assistant&ssr=false#overview])).
 
 Installation
 
