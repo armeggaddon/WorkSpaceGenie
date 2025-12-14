@@ -1,0 +1,58 @@
+{
+  "name": "genie-assistant",
+  "publisher": "VairaMuthuThangavel",
+  "displayName": "Workspace Genie",
+  "description": "A lightweight assistant that helps generate documentation from workspace files",
+  "icon":"images/image.jpg",
+  "version": "1.0.0",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "genie.processWorkspace",
+        "title": "Process Workspace for Documentation"
+      }
+    ],
+      "chatParticipants": [
+    {
+      "id": "genie.assistant",
+      "name":"genie",
+      "fullName": "Genie Assistant",
+      "description": "Chat with Genie Assistant to automate documentation",
+      "isSticky": true,
+      "commands": [
+      {
+        "name": "createDocs",
+        "description": "Enter a prompt to generate documentation from workspace files",
+        "isSticky": true
+      }
+      ]
+    }
+  ],
+    "enabledApiProposals": [
+      "chatParticipants",
+      "languageModels"
+    ]
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "node test/extension.test.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.100.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "eslint": "^9.25.1",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}
